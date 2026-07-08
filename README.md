@@ -330,12 +330,6 @@ Versiyon Kontrol Sistemlerinin Yazılım Geliştirme Sürecindeki Önemi
 
 
 
-&#x20;  Kişisel düşüncem, git ve github benim için çok bir kullanım kolaylığı sağlamadığı yönünde çünkü dosyaları ve kodları kendi başıma toplamak bana daha çok güven veriyor.
-
-
-
-
-
 6\.Genel Değerlendirme ve Sonuç
 
 
@@ -345,6 +339,80 @@ Versiyon Kontrol Sistemlerinin Yazılım Geliştirme Sürecindeki Önemi
 
 
 &#x20;  Özellikle gerçek zamanlı sistemlerde(UCAV / SİHA hedef tespit yazılımları gibi) modelin hızı(YOLO) ve verilerin backend ile kayıpsız/hızlı iletilmesi(REST API) projenin başarısını doğrudan belirleyen kritik yapı taşlarıdır.
+
+
+
+
+## 7. Derin Öğrenme Teorik Altyapısı ve Evrişimli Sinir Ağları (CNN)
+
+### Özellik Çıkarımı (Feature Extraction): Geleneksel vs. Modern Derin Öğrenme
+
+Görsellerdeki anlamlı bilgilerin (kenar, köşe, doku gibi özniteliklerin) matematiksel olarak ifade edilmesi sürecidir.
+
+* **Geleneksel Yöntemler (SIFT, HOG):** SIFT (Ölçekten Bağımsız Öznitelik Dönüşümü) ve HOG (Yönlendirilmiş Gradyanların Histogramı) gibi geleneksel algoritmalar, insan eliyle tasarlanmış (hand-crafted) matematiksel kurallara dayanır. Mühendis filtreyi kendisi yazar.
+
+* **Modern Derin Öğrenme (CNN):** Evrişimli katmanlar, görsel üzerindeki bu özellikleri (ilk katmanlarda basit kenarları, derin katmanlarda karmaşık nesne parçalarını) **otonom (kendi kendine)** öğrenir.
+
+
+### CNN (Convolutional Neural Network) Mimarisi ve Temel Bileşenleri
+
+Evrişimli(Convolutional) sinir ağları, insan görme sistemindeki lokal algılama alanlarından (local receptive fields) esinlenmiştir. En büyük avantajı, tüm resme tek tek bakmak yerine "ağırlık paylaşımı" mekanizmasıyla parametre sayısını devasa oranda azaltmasıdır.
+
+* **Evrişim Katmanı (Convolutional Layer):** Resim üzerinde gezen filtreler (kernel) aracılığıyla öznitelik haritaları (feature maps) üretir.
+
+* **Aktivasyon Katmanı:** Ağa doğrusalsızlık ekler (ReLU vb.). Doğrusalsızlık olmazsa ağ ne kadar derin olursa olsun sadece tek bir lineer fonksiyon gibi davranır.
+
+* **Havuzlama Katmanı (Pooling - Max/Average):** Resmin uzamsal boyutunu (genişlik ve yükseklik) küçültür. Bilgi kaybını minimize ederken hesaplama yükünü azaltır ve "kayma ötelemelerine" karşı modeli dayanıklı kılar. Genelde en belirgin özellikleri koruyan **Max Pooling** tercih edilir.
+
+* **Tam Bağlantılı Katman (Fully Connected Layer):** Ağın sonundaki düzleştirilmiş vektörü alır ve standart bir yapay sinir ağı gibi çalışarak nihai sınıflandırma skorlarını üretir.
+
+### Aktivasyon Fonksiyonları ve Optimizasyon Algoritmaları
+
+* **Aktivasyon Fonksiyonları (ReLU, LeakyReLU, Sigmoid, Softmax):** `Sigmoid` ikili sınıflandırmada, `Softmax` çoklu sınıflandırmada olasılık üretmek için en son katmanda kullanılır. Ara katmanlarda ise gradyan kaybolması (vanishing gradient) problemini çözdüğü ve hızlı hesaplandığı için **`ReLU`** standarttır. ReLU'nun negatif değerleri tamamen sıfırlayıp "nöron ölmesine" sebep olduğu durumlarda ise **`LeakyReLU`** kurtarıcıdır.
+
+* **Optimizasyon Algoritmaları (SGD, Adam, RMSprop):** Kayıp fonksiyonunu (Loss) sıfıra yaklaştırmak için ağırlıkları günceller. `SGD` (Stokastik Gradyan İnişi) gelenekseldir ve momentum eklenerek hızlandırılır. **`Adam`** ve `RMSprop` ise her parametre için "adaptif öğrenme oranı (adaptive learning rate)" hesaplar. Günümüz projelerinde hızlı yakınsama sağladığı için genellikle ilk tercih `Adam` algoritmasıdır.
+
+### Transfer Learning (Transferli Öğrenme)
+
+Daha önce devasa veri kümelerinde (ImageNet gibi milyonlarca resim içeren setler) eğitilmiş dev modellerin (ResNet, EfficientNet, VGG) ağırlıklarını (bilgilerini) alıp, kendi daha küçük veri kümemize uyarlama sürecidir.
+
+* **Avantajları:** Sıfırdan model eğitmeye kıyasla muazzam bir zaman ve GPU tasarrufu sağlar; az veriyle bile çok yüksek doğruluk elde edilebilir.
+
+* **Dezavantajları (Negatif Transfer):** Eğer kaynak veri kümesi (örn. genel kedi/köpek resimleri) ile bizim hedef veri kümemiz (örn. çok spesifik tıp veya askeri radar resimleri) arasında aşırı bir domain uyuşmazlığı varsa, model yanlış korelasyonlar kurabilir ve başarıyı düşürebilir.
+
+### Veri Artırımı (Data Augmentation)
+
+Modelin eğitim verilerini sadece ezberlemesini önlemek ve genelleme yeteneğini artırmak için eldeki resimleri yapay olarak çoğaltma tekniğidir. Geometrik (Döndürme, Kırpma, Yatay/Dikey Aynalama, Ölçekleme) ve Fotometrik (Parlaklık, Kontrast, Renk Uzayı değişimleri) olarak ikiye ayrılır.
+
+   Veri artırımı yaparken projenin mantığına dikkat edilmelidir. Örneğin, bir otonom sürüş veya drone hedef tespit projesinde resimleri dikey aynalamak (ters çevirmek) mantıklı olabilir; ancak bir plaka okuma veya el yazısı tanıma projesinde resmi ters çevirmek "b" harfini "d" yapacağı için modeli tamamen bozabilir.
+
+### Model Değerlendirme Metrikleri
+
+   Bir modelin başarısı sadece "Doğruluk (Accuracy)" değeriyle ölçülemez, özellikle dengesiz veri kümelerinde (örn: 1000 resmin 990'ı sağlam, 10'u kanserli hücreyse model her şeye sağlam deyip %99 accuracy alabilir ama başarısızdır). Bu yüzden Karmaşıklık Matrisi (Confusion Matrix) tabanlı metrikler kullanılır:
+
+* **Accuracy (Doğruluk):** Toplam doğru tahminlerin tüm veri kümesine oranı.
+
+* **Precision (Keskinlik):** Modelin "Pozitif" dediği tahminlerin ne kadarının gerçekten pozitif olduğu. (Yanlış alarm vermeme başarısı).
+
+* **Recall (Duyarlılık):** Gerçekteki pozitiflerin ne kadarını modelin yakalayabildiği. (Gözden kaçırmama başarısı).
+
+* **F1-Score:** Precision ve Recall değerlerinin harmonik ortalamasıdır. İkisi arasındaki dengeyi gösterir.
+
+* **mAP (Mean Average Precision):** Özellikle YOLO gibi nesne tespiti modellerinde, sınırlayıcı kutuların (bounding box) doğruluğunu ve sınıf başarısını bir arada ölçen endüstri standardı metriktir.
+
+### Düzenlileştirme ve Ezberleme (Overfitting/Underfitting)
+
+* **Overfitting (Ezberleme):** Modelin eğitim verisinde sıfır hata yaparken, ilk defa gördüğü validasyon/test verisinde çuvallamasıdır. Eğitim kaybı düşerken validasyon kaybının yükselmesiyle grafiklerde kendini belli eder.
+
+* **Underfitting (Öğrenememe):** Modelin kapasitesinin yetersiz olması veya az eğitilmesi sebebiyle hem eğitim hem validasyon setinde yüksek hata payına sahip olmasıdır.
+
+**Çözüm Yöntemleri (Regularization):**
+
+1.  **Batch Normalization:** Katmanların girdilerini küçük paketler (batch) halinde normalize ederek eğitimin çok daha kararlı ve hızlı olmasını sağlar.
+
+2.  **Dropout:** Eğitim sırasında her adımda belirlenen orandaki ( örn: %30) nöronu rastgele devre dışı bırakır. Böylece ağdaki nöronlar birbirine bağımlı hale gelmez, hepsi sorumluluk alarak ezberlemeyi engeller.
+
+3.  **L1/L2 Regularization:** Kayıp fonksiyonuna ağırlıkların büyüklüğünü ceza olarak ekler. Büyük ağırlıkları baskılayarak modelin daha esnek/sade kalmasını sağlar.
 
 
 
