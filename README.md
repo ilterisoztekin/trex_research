@@ -20,19 +20,19 @@ Bu repo, görüntü işleme, yapay zekâ, temel backend mimarisi (API) ve versiy
 
 
 
-1\. Görüntü İşlemeye Giriş
-2\. Python ve Görüntü İşleme Ekosistemi
-3\. Yapay Zekâ ve Görüntü İşleme							
-4\. Temel API Bilgisi
-5\. Git ve Yazılım Geliştirme Süreci
-6\. Genel Değerlendirme ve Sonuç
-7\. Derin Öğrenme Teorik Altyapısı ve Evrişimli Sinir Ağları (CNN)
-8\. Haber Metninden Konu Sınıflandırma Projesi
+1. Görüntü İşlemeye Giriş
+2. Python ve Görüntü İşleme Ekosistemi
+3. Yapay Zekâ ve Görüntü İşleme							
+4. Temel API Bilgisi
+5. Git ve Yazılım Geliştirme Süreci
+6. Genel Değerlendirme ve Sonuç
+7. Derin Öğrenme Teorik Altyapısı ve Evrişimli Sinir Ağları (CNN)
+8. Haber Metninden Konu Sınıflandırma Projesi
 
 
 
 
-&#x20;  
+ 
 
 1\. Görüntü İşlemeye Giriş
 
